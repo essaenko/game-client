@@ -1,7 +1,7 @@
 import { PluginLib } from "./plugin.lib";
 import { SocketUpdate } from "../socket.types";
 import { PluginRegistry } from "./plugin.types";
-import { BytesToInt } from "../binary.lib";
+import { BytesToFloat } from "../binary.lib";
 
 export class PositionPlugin extends PluginLib {
   public name: string = "PositionPlugin";
@@ -10,8 +10,8 @@ export class PositionPlugin extends PluginLib {
   public x: number = 0;
   public y: number = 0;
 
-  public sync = (update: SocketUpdate<Uint8Array>) => {
-    const data = this.decode(update.data);
+  public sync = (update: SocketUpdate<ArrayBuffer>) => {
+    const data = this.decode(new Float64Array(update.data));
 
     if (data.x) {
       this.x = data.x;
@@ -22,10 +22,10 @@ export class PositionPlugin extends PluginLib {
     }
   };
 
-  public decode = (buffer: Uint8Array): { x?: number; y?: number } => {
+  public decode = (buffer: Float64Array): { x?: number; y?: number } => {
     return {
-      x: BytesToInt(buffer.slice(0, 2), 2),
-      y: BytesToInt(buffer.slice(2), 2),
+      x: BytesToFloat(buffer.slice(0, 4)),
+      y: BytesToFloat(buffer.slice(4)),
     };
   };
 }

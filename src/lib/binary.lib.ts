@@ -6,4 +6,9 @@ export const BytesToInt = (number: Uint8Array, bytes: number): number => {
   }
 
   return result;
-}
+};
+
+export const BytesToFloat = (number: Float64Array): number => {
+  console.log(new DataView(number.buffer).getFloat64(0));
+  return number[0];
+};
